@@ -1,8 +1,11 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_ksu/app_router.dart';
+import 'package:flutter_node_store/app_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -12,28 +15,29 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
- 
   final introKey = GlobalKey<IntroductionScreenState>();
 
   // ฟังก์ชันเมื่อจบการแสดง Intro
   void _onIntroEnd(context) async {
+    // Setค่าให้กับ SharedPreferences เพื่อบอกว่าเคยแสดง Intro แล้ว
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('welcomeStatus', true);
 
     // ไปยังหน้า Login แบบเปิดซ้อนทับหน้าเดิม
     // Navigator.pushNamed(context, AppRouter.login); // เปิดแบบปกติมีปุ่มย้อนกลับ
 
     // ไปยังหน้า Login แบบเปิดแบบไม่มีปุ่มย้อนกลับ แทนที่หน้าเดิม
-    Navigator.pushReplacementNamed(context, AppRouter.login); // เปิดแบบไม่มีปุ่มย้อนกลับ
-    
+    // เปิดแบบไม่มีปุ่มย้อนกลับ
+    Navigator.pushReplacementNamed(context, AppRouter.login);
   }
 
   // ฟังก์ชันกำหนดภาพที่ใช้แสดงใน Intro
   Widget _buildImage(String assetName, [double width = 350]) {
     return Image.asset('assets/images/$assetName', width: width);
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
     // กำหนดให้แสดงผลเฉพาะหน้าจอแนวตั้ง
     SystemChrome.setPreferredOrientations([
       // DeviceOrientation.portraitUp,
@@ -64,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             body:
                 "เริ่มต้นใช้ระบบกับเราเพียง 3 ขั้นตอนง่ายๆ และเริ่มต้นใช้งานได้ทันที",
             image: Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: _buildImage('slide1.png'),
             ),
             decoration: pageDecoration,
@@ -74,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             body:
                 "ดูภาพรวมของระบบได้ทุกที่ทุกเวลา ด้วยระบบที่ออกแบบมาเพื่อความง่าย",
             image: Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: _buildImage('slide2.png'),
             ),
             decoration: pageDecoration,
@@ -84,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             body:
                 "ติดตามการซื้อขายได้ทุกที่ทุกเวลา ด้วยระบบที่ออกแบบมาเพื่อความง่าย",
             image: Padding(
-              padding: const EdgeInsets.only(top:100.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: _buildImage('slide3.png'),
             ),
             decoration: pageDecoration,
@@ -100,7 +104,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         back: const Icon(Icons.arrow_back),
         skip: const Text('ข้าม', style: TextStyle(fontWeight: FontWeight.w600)),
         next: const Icon(Icons.arrow_forward),
-        done: const Text('เสร็จสิ้น', style: TextStyle(fontWeight: FontWeight.w600)),
+        done: const Text('เสร็จสิ้น',
+            style: TextStyle(fontWeight: FontWeight.w600)),
         curve: Curves.fastLinearToSlowEaseIn,
         controlsMargin: const EdgeInsets.all(16),
         controlsPadding: kIsWeb
@@ -122,7 +127,5 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
-
   }
-
 }
